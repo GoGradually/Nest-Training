@@ -1,27 +1,29 @@
-// prisma/schema.prisma
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
 
 datasource db {
   provider = "sqlite"
 }
 
-generator client {
-  provider      = "prisma-client"
-  output        = "../src/generated/prisma"
-  moduleFormat  = "cjs"
-}
-
 model User {
-  id      Int     @id @default(autoincrement())
-  email   String  @unique
-  name    String?
-  posts   Post[]  // User:Post = 1:N 관계 (한 사용자는 여러 게시글 가짐)
+  id    Int     @id @default(autoincrement())
+  email String  @unique // 유저의 이메일 (고유 값)
+  name  String? // 유저 이름 (선택 사항)
+  posts Post[] // 작성한 게시글 목록 (1:N 관계)
 }
 
 model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  id        Int      @id @default(autoincrement())
+  title     String // 게시글 제목
+  content   String? // 게시글 내용 (선택 사항)
+  author    User?    @relation(fields: [authorId], references: [id]) // 작성자 (User 관계)
+  authorId  Int? // 연결된 User의 ID (외래 키)
 }
