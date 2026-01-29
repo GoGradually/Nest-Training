@@ -1,0 +1,27 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider      = "prisma-client"
+  output        = "../src/generated/prisma"
+  moduleFormat  = "cjs"
+}
+
+model User {
+  id      Int     @id @default(autoincrement())
+  email   String  @unique
+  name    String?
+  posts   Post[]  // User:Post = 1:N 관계 (한 사용자는 여러 게시글 가짐)
+}
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
